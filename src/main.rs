@@ -15,6 +15,7 @@ use diesel::r2d2::{self, ConnectionManager};
 
 mod auth_handler;
 mod cpu_handler;
+mod ip_handler;
 mod errors;
 mod models;
 mod register_handler;
@@ -66,6 +67,7 @@ fn main() -> std::io::Result<()> {
                 web::scope("/api")
                     .service(web::resource("/ping").to(ping))
                     .service(web::resource("/cpu").to(cpu_handler::cpu))
+                    .service(web::resource("/get/ip").to(ip_handler::get_ip))
                     .service(
                         web::scope("/auth")
                             .service(
