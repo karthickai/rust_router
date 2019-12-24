@@ -14,6 +14,7 @@ use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 
 mod auth_handler;
+mod cpu_handler;
 mod errors;
 mod models;
 mod register_handler;
@@ -29,7 +30,8 @@ fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info,actix_server=info");
     env_logger::init();
     let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let address: String = std::env::var("ADDRESS").unwrap_or_else(|_| "http://localhost".to_string());
+    let address: String =
+        std::env::var("ADDRESS").unwrap_or_else(|_| "http://localhost".to_string());
 
     // create db connection pool
     let manager = ConnectionManager::<SqliteConnection>::new(database_url);
@@ -63,6 +65,7 @@ fn main() -> std::io::Result<()> {
             .service(
                 web::scope("/api")
                     .service(web::resource("/ping").to(ping))
+                    .service(web::resource("/cpu").to(cpu_handler::cpu))
                     .service(
                         web::scope("/auth")
                             .service(
