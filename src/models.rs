@@ -16,6 +16,27 @@ pub struct SlimUser {
     pub username: String,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct MSTP {
+    pub mac: String,
+    pub master: String,
+    pub frames: String,
+    pub network: String,
+    pub baudrate: String,
+    pub parity: String,
+    pub stopbit: String,
+    pub databit: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct IP {
+    pub network: String,
+    pub port: String,
+    pub ipaddress: String,
+    pub subnet: String,
+    pub gateway: String,
+}
+
 impl From<User> for SlimUser {
     fn from(user: User) -> Self {
         SlimUser {
