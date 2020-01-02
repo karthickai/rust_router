@@ -1,6 +1,6 @@
 [package]
-name = "actix_login"
-version = "0.2.0"
+name = "router_web"
+version = "1.2.0"
 authors = ["karth <karthickps.ai@gmail.com>"]
 edition = "2018"
 license = "MIT"

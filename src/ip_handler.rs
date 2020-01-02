@@ -5,15 +5,19 @@ use actix_web::web;
 use actix_web::HttpResponse;
 use std::process::Command;
 
-pub fn get_ip() -> HttpResponse {
-    let execute = execute_ip_command();
-    match execute {
-        Ok(v) => HttpResponse::build(StatusCode::OK)
-            .content_type("application/json")
-            .body(v[0].to_string()),
-        Err(_) => {
-            HttpResponse::InternalServerError().json("Internal Server Error, Please try later")
+pub fn get_ip(id: Identity) -> HttpResponse {
+    if let Some(_) = id.identity() {
+        let execute = execute_ip_command();
+        match execute {
+            Ok(v) => HttpResponse::build(StatusCode::OK)
+                .content_type("application/json")
+                .body(v[0].to_string()),
+            Err(_) => {
+                HttpResponse::InternalServerError().json("Internal Server Error, Please try later")
+            }
         }
+    } else {
+        HttpResponse::Unauthorized().json("Unauthorized")
     }
 }
 

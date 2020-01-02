@@ -1,16 +1,21 @@
+use actix_identity::Identity;
 use actix_web::http::StatusCode;
 use actix_web::HttpResponse;
 use std::process::Command;
 
-pub fn cpu() -> HttpResponse {
-    let execute = execute_cpu_command();
-    match execute {
-        Ok(v) => HttpResponse::build(StatusCode::OK)
-            .content_type("application/json")
-            .body(v[0].to_string()),
-        Err(_) => {
-            HttpResponse::InternalServerError().json("Internal Server Error, Please try later")
+pub fn cpu(id: Identity) -> HttpResponse {
+    if let Some(_) = id.identity() {
+        let execute = execute_cpu_command();
+        match execute {
+            Ok(v) => HttpResponse::build(StatusCode::OK)
+                .content_type("application/json")
+                .body(v[0].to_string()),
+            Err(_) => {
+                HttpResponse::InternalServerError().json("Internal Server Error, Please try later")
+            }
         }
+    } else {
+        HttpResponse::Unauthorized().json("Unauthorized")
     }
 }
 

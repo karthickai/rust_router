@@ -1,5 +1,6 @@
 use crate::errors::ServiceError;
 use easy_password::bcrypt::{hash_password, verify_password};
+use std::process::Command;
 
 lazy_static::lazy_static! {
 pub  static ref SECRET_KEY: String = std::env::var("SECRET_KEY").unwrap_or_else(|_| "0123".repeat(8));
@@ -18,4 +19,20 @@ pub fn verify(hash: &str, password: &str) -> Result<bool, ServiceError> {
         dbg!(err);
         ServiceError::Unauthorized
     })
+}
+
+pub fn execute_router_service_stop() {
+    Command::new("systemctl")
+        .arg("stop")
+        .arg("router.service")
+        .output()
+        .expect("Unable to stop the router.service command");
+}
+
+pub fn execute_router_service_start() {
+    Command::new("systemctl")
+        .arg("start")
+        .arg("router.service")
+        .output()
+        .expect("Unable to start the router.service command");
 }

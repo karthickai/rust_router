@@ -71,7 +71,12 @@ fn main() -> std::io::Result<()> {
                     .service(web::resource("/get/cpu").to(cpu_handler::cpu))
                     .service(web::resource("/get/ip").to(ip_handler::get_ip))
                     .service(web::resource("/get/mstp").to(mstp_handler::get_mstp))
-                    .service(web::resource("/get/mstp/status").to(mstp_status_handler::status))
+                    .service(
+                        web::resource("/get/mstp/status/deep").to(mstp_status_handler::deep_scan),
+                    )
+                    .service(
+                        web::resource("/get/mstp/status/quick").to(mstp_status_handler::quick_scan),
+                    )
                     .service(web::resource("/post/ip").route(web::post().to(ip_handler::post_ip)))
                     .service(
                         web::resource("/post/mstp").route(web::post().to(mstp_handler::post_mstp)),
