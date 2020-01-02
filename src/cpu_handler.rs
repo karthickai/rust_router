@@ -1,5 +1,5 @@
-use actix_web::HttpResponse;
 use actix_web::http::StatusCode;
+use actix_web::HttpResponse;
 use std::process::Command;
 
 pub fn cpu() -> HttpResponse {

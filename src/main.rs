@@ -15,10 +15,11 @@ use diesel::r2d2::{self, ConnectionManager};
 
 mod auth_handler;
 mod cpu_handler;
-mod ip_handler;
-mod mstp_handler;
 mod errors;
+mod ip_handler;
 mod models;
+mod mstp_handler;
+mod mstp_status_handler;
 mod register_handler;
 mod schema;
 mod utils;
@@ -67,9 +68,14 @@ fn main() -> std::io::Result<()> {
             .service(
                 web::scope("/api")
                     .service(web::resource("/ping").to(ping))
-                    .service(web::resource("/cpu").to(cpu_handler::cpu))
+                    .service(web::resource("/get/cpu").to(cpu_handler::cpu))
                     .service(web::resource("/get/ip").to(ip_handler::get_ip))
                     .service(web::resource("/get/mstp").to(mstp_handler::get_mstp))
+                    .service(web::resource("/get/mstp/status").to(mstp_status_handler::status))
+                    .service(web::resource("/post/ip").route(web::post().to(ip_handler::post_ip)))
+                    .service(
+                        web::resource("/post/mstp").route(web::post().to(mstp_handler::post_mstp)),
+                    )
                     .service(
                         web::scope("/auth")
                             .service(
