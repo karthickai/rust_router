@@ -56,7 +56,7 @@ pub fn post_ip(ip_data: web::Json<IP>, id: Identity) -> HttpResponse {
     }
 }
 
-fn execute_post_ip_command(ip_data: IP) -> Result<Vec<String>, &'static str> {
+fn execute_post_ip_command(ip_data: IP) -> Result<&'static str, &'static str> {
     let ip = serde_json::to_string(&ip_data).expect("Unable to convert json string");
     println!("{:?}", ip);
     let output = Command::new("/usr/bin/python3")
@@ -69,13 +69,7 @@ fn execute_post_ip_command(ip_data: IP) -> Result<Vec<String>, &'static str> {
 
     println!("Output status {}", output.status);
     if output.status.success() {
-        let output_string = String::from_utf8_lossy(&output.stdout);
-        let output_lines: Vec<_> = output_string.trim().lines().collect();
-        let mut ip_data: Vec<String> = Vec::new();
-        for line in output_lines {
-            ip_data.push(line.to_string());
-        }
-        Ok(ip_data)
+        Ok("done")
     } else {
         Err("Error in Execution")
     }

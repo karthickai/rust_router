@@ -64,7 +64,6 @@ fn main() -> std::io::Result<()> {
                     .allowed_headers(vec![header::AUTHORIZATION, header::CONTENT_TYPE])
                     .max_age(3600),
             )
-            .service(web::resource("/ping").to(ping))
             .service(
                 web::scope("/api")
                     .service(web::resource("/ping").to(ping))

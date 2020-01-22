@@ -20,7 +20,8 @@ pub fn cpu(id: Identity) -> HttpResponse {
 }
 
 fn execute_cpu_command() -> Result<Vec<String>, &'static str> {
-    let output = Command::new("./cpu.sh")
+    let output = Command::new("sh")
+        .arg("/home/root/bin/cpu.sh")
         .output()
         .expect("Unable to exectue the ./bacwi command");
 

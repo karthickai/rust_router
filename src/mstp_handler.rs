@@ -56,8 +56,9 @@ pub fn post_mstp(mstp_data: web::Json<MSTP>, id: Identity) -> HttpResponse {
     }
 }
 
-fn execute_post_mstp_command(mstp_data: MSTP) -> Result<Vec<String>, &'static str> {
+fn execute_post_mstp_command(mstp_data: MSTP) -> Result<&'static str, &'static str> {
     let mstp = serde_json::to_string(&mstp_data).expect("Unable to convert json string");
+    println!("{}", mstp);
     let output = Command::new("/usr/bin/python3")
         .arg("/home/root/bin/utils.py")
         .arg("mstp")
@@ -66,13 +67,7 @@ fn execute_post_mstp_command(mstp_data: MSTP) -> Result<Vec<String>, &'static st
         .output()
         .expect("Unable to exectue the utils.py command");
     if output.status.success() {
-        let output_string = String::from_utf8_lossy(&output.stdout);
-        let output_lines: Vec<_> = output_string.trim().lines().collect();
-        let mut mstp_data: Vec<String> = Vec::new();
-        for line in output_lines {
-            mstp_data.push(line.to_string());
-        }
-        Ok(mstp_data)
+        Ok("done")
     } else {
         Err("Error in Execution")
     }
