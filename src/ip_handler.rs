@@ -67,10 +67,15 @@ fn execute_post_ip_command(ip_data: IP) -> Result<&'static str, &'static str> {
         .output()
         .expect("Unable to exectue the utils.py command");
 
-    println!("Output status {}", output.status);
-    if output.status.success() {
-        Ok("done")
-    } else {
-        Err("Error in Execution")
-    }
+    println!("status: {}", output.status);
+    println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+    println!("stderr: {}", String::from_utf8_lossy(&output.stderr));
+
+    // if output.status.success() == 0 | {
+    //     Ok("done")
+    // } else {
+    //     Err("Error in Execution")
+    // }
+
+    Ok("done")
 }

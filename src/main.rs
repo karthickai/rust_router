@@ -5,6 +5,7 @@ extern crate diesel;
 extern crate serde_derive;
 extern crate easy_password;
 
+use actix_files as fs;
 use actix_cors::Cors;
 use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web::{
@@ -35,7 +36,7 @@ fn main() -> std::io::Result<()> {
     let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let address: String =
         std::env::var("ADDRESS").unwrap_or_else(|_| "http://localhost".to_string());
-
+    println!("{}", address);
     // create db connection pool
     let manager = ConnectionManager::<SqliteConnection>::new(database_url);
     let pool: models::Pool = r2d2::Pool::builder()
@@ -58,12 +59,9 @@ fn main() -> std::io::Result<()> {
             ))
             .data(web::JsonConfig::default().limit(4096))
             .wrap(
-                Cors::new()
-                    .allowed_origin(&address)
-                    .send_wildcard()
-                    .allowed_headers(vec![header::AUTHORIZATION, header::CONTENT_TYPE])
-                    .max_age(3600),
+                Cors::new().supports_credentials()
             )
+
             .service(
                 web::scope("/api")
                     .service(web::resource("/ping").to(ping))
@@ -99,9 +97,13 @@ fn main() -> std::io::Result<()> {
                             ),
                     ),
             )
+            
+
+
     })
     .bind("0.0.0.0:8000")
     .expect("Cannot bind to 0.0.0.0:8000")
-    .workers(1)
+    .workers(3)
     .run()
+    
 }

@@ -1,9 +1,8 @@
+use crate::utils;
 use actix_identity::Identity;
 use actix_web::http::StatusCode;
 use actix_web::HttpResponse;
 use std::process::Command;
-use crate::utils;
-
 
 pub fn deep_scan(id: Identity) -> HttpResponse {
     if let Some(_) = id.identity() {
@@ -124,5 +123,3 @@ fn execute_db_util_command_deep(data: String) -> Result<String, &'static str> {
         Err("Error in Execution")
     }
 }
-
-
